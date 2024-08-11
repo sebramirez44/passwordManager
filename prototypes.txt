@@ -1,0 +1,5 @@
+figma:
+https://www.figma.com/design/lIHxZgvkJGz5ZFPqnBR8ep/password-manager?node-id=0-1&t=PAdLhnwQ5L3zzQxX-1
+
+lucidchart:
+https://lucid.app/lucidchart/5037ae48-40a9-4f82-acf1-b90c762dbbd6/edit?viewport_loc=-52%2C-420%2C1983%2C1242%2C0_0&invitationId=inv_763a91ba-f31a-433e-808d-4019cf7de93f
