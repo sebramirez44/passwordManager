@@ -13,11 +13,8 @@ export async function POST(req: Request) {
         //checar que password hasheado exista en DB
         //enviar jwt
         const {email, password} = await req.json();
-        const foundUser = await db.user.findFirst({
-            where: {
-                email: email
-            }
-        });
+        const foundUser = await db.getUserByEmail(email);
+
         if (!foundUser) {
             return new NextResponse("Incorrect email or password", {status: 405});
         } else {

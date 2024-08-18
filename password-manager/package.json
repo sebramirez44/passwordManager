@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@libsql/client": "^0.8.1",
+    "axios": "^1.7.4",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
     "jose": "^5.6.3",

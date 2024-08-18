@@ -21,17 +21,17 @@ export async function middleware(req: NextRequest) {
         }
         const token = authHeader.split(' ')[1];
 
-        // try {
-        //     const {payload: jwtData} = await jose.jwtVerify(
-        //         token, new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET as string)
-        //     );
-        //     //jwtData.uid => 'your-data'
-        //     console.log("jwt verified man")
-        // } catch(error) {
-        //     console.log(error);
-        //     //jwt validfation failed
-        //     return new NextResponse("error", {status: 405});
-        // }
+        try {
+            const {payload: jwtData} = await jose.jwtVerify(
+                token, new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET as string)
+            );
+            //jwtData.uid => 'your-data'
+            console.log("jwt verified man")
+        } catch(error) {
+            console.log(error);
+            //jwt validfation failed
+            return new NextResponse("error", {status: 405});
+        }
 
         
         console.log("protected route");
