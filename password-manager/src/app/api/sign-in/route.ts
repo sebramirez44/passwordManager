@@ -14,48 +14,30 @@ export async function POST(req: Request) {
         //enviar jwt
         const {email, password} = await req.json();
         const foundUser = await db.getUserByEmail(email);
+        const foundUserData = foundUser.data.results[0].response.result.rows;
 
-        if (!foundUser) {
+        if (!foundUserData.length) {
             return new NextResponse("Incorrect email or password", {status: 405});
         } else {
-            //checar si la password del usuario encontrado y la password que me dieron es same shit
-            if (await bcrypt.compare(password, foundUser.password)) {
-                //return jwt
-                //crear access token y refresh token y enviarlas al usuario, agregar refresh_token a la base de datos
-                // const accessToken = jwt.sign(
-                //     {"email": foundUser.email},
-                //     process.env.ACCESS_TOKEN_SECRET as string,
-                //     {expiresIn: '30s'} //cambiar este tiempo para produccion
-                // )
-                //stackoverflow dice que await new, pero dice que no tiene efecto? so idk
-                const accessToken = await new jose.SignJWT({"email": foundUser.email})
+            if (await bcrypt.compare(password, foundUserData[0][2].value)) {
+
+                const accessToken = await new jose.SignJWT({"email": foundUserData[0][1].value})
                     .setProtectedHeader({alg: 'HS256'})
                     .setIssuedAt()
                     .setExpirationTime('30s')
                     .sign(new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET as string));
-                // const refreshToken = jwt.sign(
-                //     {"email": foundUser.email},
-                //     process.env.REFRESH_TOKEN_SECRET as string,
-                //     {expiresIn: '1d'} //maybe tambien cambiar este idk cuanto es lo normal
-                // )
-                const refreshToken = await new jose.SignJWT({"email": foundUser.email})
+
+                const refreshToken = await new jose.SignJWT({"email": foundUserData[0][1].value})
                     .setProtectedHeader({alg: 'HS256'})
                     .setIssuedAt()
                     .setExpirationTime('1d')
                     .sign(new TextEncoder().encode(process.env.REFRESH_TOKEN_SECRET as string));
-                //agregar la refreshToken al usuario en la db
-                db.user.update({
-                    where: {email: foundUser.email},
-                    data: {
-                        refresh_token: refreshToken
-                    }
-                });
+
+                const updatedEmail = await db.updateRefreshToken(refreshToken, foundUserData[0][0].value)
                 
-                //enviar refresh token como http cookie,
-                //enviar access_token como json
                 cookies().set({name: 'jwt', value: refreshToken, httpOnly: true, maxAge: 24 * 60 * 60 * 100}); //asumiendo que maxAge es en miliseconds
-                // return NextResponse.json(accessToken);
-                return new NextResponse("ok", {status: 200});
+
+                return NextResponse.json(accessToken);
             } else {
                 return new NextResponse("Incorrect email or password", {status: 405});
             }

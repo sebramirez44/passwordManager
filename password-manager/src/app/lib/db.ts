@@ -33,5 +33,13 @@ export const db = {
             {type: "close"}
         ]});
         return data;
+    },
+
+    async updateRefreshToken(refresh: string, id: string) {
+        const data = await instance.post('', {requests: [
+            {type: "execute", stmt: {sql: `UPDATE User SET refresh_token=${refresh} WHERE id=${id}`}},
+            {type: "close"}
+        ]});
+        return data;
     }
 };
