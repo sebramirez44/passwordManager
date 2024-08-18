@@ -1,6 +1,7 @@
 // Conectar por http, tener un objeto db que tiene:
 // execute solo, toma la sql query y ya y lo ejecuta por http
 // execute con args? idk si pueda
+// TODO: cambiar statements a incluir args en lugar de insertarlo a la query
 import axios from "axios";
 
 const instance = axios.create({

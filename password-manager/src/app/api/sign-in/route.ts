@@ -1,9 +1,10 @@
+//TODO: data no siempre es lo que pienso que es aqui, mejorar codigo para que si request regresa algo inesperado aun funciona
+//de alguna manera, aunque tire un error
+
 //remove prisma from db
 import { NextResponse } from "next/server";
 import { db } from "@/app/lib/db";
 import bcrypt from "bcrypt";
-//cambiar por jose library
-import jwt from "jsonwebtoken";
 import * as jose from 'jose';
 import {cookies} from 'next/headers';
 
@@ -38,6 +39,7 @@ export async function POST(req: Request) {
                 cookies().set({name: 'jwt', value: refreshToken, httpOnly: true, maxAge: 24 * 60 * 60 * 100}); //asumiendo que maxAge es en miliseconds
 
                 return NextResponse.json(accessToken);
+
             } else {
                 return new NextResponse("Incorrect email or password", {status: 405});
             }
