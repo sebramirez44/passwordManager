@@ -6,6 +6,7 @@
 //creo que en el video obtiene req.user de haber hecho sign-in anteriormente
 //cambiar esto a hooks
 import { NextResponse } from "next/server";
+//remove prisma from db
 import { db } from "@/app/lib/db";
 //cambiar por jose library
 import jwt from "jsonwebtoken";

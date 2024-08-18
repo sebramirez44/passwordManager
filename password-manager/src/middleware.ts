@@ -4,6 +4,7 @@
 import {NextResponse, type NextRequest} from 'next/server';
 //cambiar por jose library
 import jwt from "jsonwebtoken";
+import * as jose from 'jose';
 
 export async function middleware(req: NextRequest) {
     //revisar que la ruta no sea /sign-in, /sign-up
@@ -19,31 +20,22 @@ export async function middleware(req: NextRequest) {
         //     return;
         }
         const token = authHeader.split(' ')[1];
-        // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InNlYnJhbWlyZXpjb3JkZXJvQGdtYWlsLmNvbSIsImlhdCI6MTcyMzc4MjMwMSwiZXhwIjoxNzIzODY4NzAxfQ.-VRAEqbgRwJAkcJwngQxeiRMd2PAQX1qt37g7TyZxbo"
-        //this is the issue
 
-        try {
-            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string);
-            return NextResponse.next();
-        } catch(error) {
-            console.log("penis");
-            console.log(error);
-            return new NextResponse("invalid jwt", {status: 405});
-        }
-        // jwt.verify(
-        //     token,
-        //     process.env.ACCESS_TOKEN_SECRET as string,
-        //     (err, decoded) => {
-        //         if (err) return new NextResponse("Invalid jwt", {status: 405});
-        //         // en el video hace esto pero yo no puedo cambiar el request body, maybe agregarlo a un hook para obtener
-        //         // req.email = decoded.username; no
-        //         // se porque quiere que haga esto
-        //         return NextResponse.next();
-        //     }
-        // )
+        // try {
+        //     const {payload: jwtData} = await jose.jwtVerify(
+        //         token, new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET as string)
+        //     );
+        //     //jwtData.uid => 'your-data'
+        //     console.log("jwt verified man")
+        // } catch(error) {
+        //     console.log(error);
+        //     //jwt validfation failed
+        //     return new NextResponse("error", {status: 405});
+        // }
 
         
         console.log("protected route");
+        return NextResponse.next();
     } else {
         return NextResponse.next();
     }
