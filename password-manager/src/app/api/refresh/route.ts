@@ -9,7 +9,7 @@ import { NextResponse } from "next/server";
 //remove prisma from db
 import { db } from "@/app/lib/db";
 //cambiar por jose library
-import jwt from "jsonwebtoken";
+import * as jose from 'jose';
 import {cookies} from "next/headers";
 
 interface JwtPayload {
@@ -18,40 +18,43 @@ interface JwtPayload {
 
 export async function GET(req: Request) {
     try {
-        // const refreshToken = cookies().get('jwt');
-        // if (!refreshToken) {
-            // return new NextResponse("Refresh token missing", {status: 401});
-        // }
+        const refreshToken = cookies().get('jwt');
+        if (!refreshToken) {
+            return new NextResponse("Refresh token missing", {status: 401});
+        }
         //encontrar user en database utilizando refresh_token
-        // const foundUser = await db.user.findFirst({
-        //     where: {
-        //         refresh_token: refreshToken.value
-        //     }
-        // })
+        const foundUser = await db.findUserWithRefresh(refreshToken.value);
+        const foundUserData = foundUser.data.results[0].response.result.rows;
 
-        // if (!foundUser) {
-            // return new NextResponse("Invalid refresh token", {status: 403});
-        // }
+        if (!foundUserData.length) {
+            return new NextResponse("Invalid refresh token", {status: 403});
+        }
+        console.log("after finding user");
 
-        // jwt.verify(
-        //     refreshToken.value,
-        //     process.env.REFRESH_TOKEN_SECRET as string,
-        //     //arreglar el typing the decoded, por ahora me vale chile alch
-        //     (err, decoded:any) => {
-        //         if (err || !decoded || foundUser.email !== decoded.email) return new NextResponse("error validating refresh token", {status: 403});
-        //         const accessToken = jwt.sign(
-        //             {"email": decoded.email},
-        //             process.env.ACCESS_TOKEN_SECRET as string,
-        //             {expiresIn: '30s'}
-        //         );
-        //         // return NextResponse.json({accessToken});
-        //     }
-        // )
-        return new NextResponse("valid request", {status: 200});
+        //TODO: cambiar refreshToken.value a obtener el valor de la base de datos
+        try {
+            const {payload: jwtData} = await jose.jwtVerify(
+                refreshToken.value, new TextEncoder().encode(process.env.REFRESH_TOKEN_SECRET as string)
+            );
+            //hacer una nueva access token y hacerle return por json
+            const accessToken = await new jose.SignJWT({"email": foundUserData[0][1].value})
+                .setProtectedHeader({alg: 'HS256'})
+                .setIssuedAt()
+                .setExpirationTime('30s')
+                .sign(new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET as string));
+
+            return NextResponse.json({accessToken});
+
+        } catch(error) {
+            console.log(error);
+            console.log("jwt not verified");
+            return new NextResponse("invalid token", {status: 403});
+        }
 
         
     } catch(error) {
-        // return new NextResponse("some error", {status: 500});
-
+        console.log(error);
+        console.log("there was an error");
+        return new NextResponse("some error", {status: 500});
     }
 }

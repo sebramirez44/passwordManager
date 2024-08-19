@@ -9,7 +9,7 @@ import * as jose from 'jose';
 export async function middleware(req: NextRequest) {
     //revisar que la ruta no sea /sign-in, /sign-up
     //ademas revisar que comience con API creo.
-    if (!(req.nextUrl.pathname.startsWith('/api/sign-in') || req.nextUrl.pathname.startsWith('/api/sign-up')) && req.nextUrl.pathname.startsWith('/api')) {
+    if (!(req.nextUrl.pathname.startsWith('/api/sign-in') || req.nextUrl.pathname.startsWith('/api/sign-up') || req.nextUrl.pathname.startsWith('/api/refresh')) && req.nextUrl.pathname.startsWith('/api')) {
         //revisar la JWT que se envio por el client
         //Buscar el authHeader, si no existe error
         //Sacar la parte que es la token del authHeader, despues de Bearer
@@ -27,6 +27,7 @@ export async function middleware(req: NextRequest) {
             );
             //jwtData.uid => 'your-data'
             console.log("jwt verified man")
+            return NextResponse.next();
         } catch(error) {
             console.log(error);
             //jwt validfation failed
@@ -34,8 +35,6 @@ export async function middleware(req: NextRequest) {
         }
 
         
-        console.log("protected route");
-        return NextResponse.next();
     } else {
         return NextResponse.next();
     }

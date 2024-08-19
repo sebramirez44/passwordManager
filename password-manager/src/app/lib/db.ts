@@ -14,7 +14,7 @@ const instance = axios.create({
 export const db = {
     async getUsers() {
         const data = await instance.post('', {requests: [
-            {type: "execute", stmt: {sql: "SELECT * FROM Users"}},
+            {type: "execute", stmt: {sql: "SELECT * FROM User"}},
             {type: "close"}
         ]});
         return data;
@@ -38,7 +38,15 @@ export const db = {
 
     async updateRefreshToken(refresh: string, id: string) {
         const data = await instance.post('', {requests: [
-            {type: "execute", stmt: {sql: `UPDATE User SET refresh_token=${refresh} WHERE id=${id}`}},
+            {type: "execute", stmt: {sql: `UPDATE User SET refresh_token='${refresh}' WHERE id='${id}'`}},
+            {type: "close"}
+        ]});
+        return data;
+    },
+    //encontrar User usando refreshToken
+    async findUserWithRefresh(refresh: string) {
+        const data = await instance.post('', {requests: [
+            {type: "execute", stmt: {sql: `SELECT * FROM User WHERE refresh_token='${refresh}'`}},
             {type: "close"}
         ]});
         return data;
