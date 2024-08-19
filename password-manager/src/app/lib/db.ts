@@ -22,7 +22,20 @@ export const db = {
 
     async insertUser(email: string, password: string) {
         const data = await instance.post('', {requests: [
-            {type: "execute", stmt: {sql: `INSERT INTO User (email, password) VALUES ('${email}', '${password}')`}},
+            {type: "execute", stmt: {
+                sql: `INSERT INTO User (email, password) VALUES (?, ?)`,
+                args: [
+                    {
+                        type: "text",
+                        value: `${email}`
+                    },
+                    {
+                        type: "text",
+                        value: `${password}`
+                    }
+                ]
+            
+            }},
             {type: "close"} //idk si ocupo esto
         ]});
         return data;
@@ -30,7 +43,15 @@ export const db = {
 
     async getUserByEmail(email: string) {
         const data = await instance.post('', {requests: [
-            {type: "execute", stmt: {sql: `SELECT * FROM User WHERE email='${email}'`}},
+            {type: "execute", stmt: {
+                sql: `SELECT * FROM User WHERE email=?`,
+                args: [
+                    {
+                        type: "text",
+                        value: `${email}`
+                    }
+                ]
+            }},
             {type: "close"}
         ]});
         return data;
@@ -38,7 +59,19 @@ export const db = {
 
     async updateRefreshToken(refresh: string, id: string) {
         const data = await instance.post('', {requests: [
-            {type: "execute", stmt: {sql: `UPDATE User SET refresh_token='${refresh}' WHERE id='${id}'`}},
+            {type: "execute", stmt: {
+                sql: `UPDATE User SET refresh_token=? WHERE id=?`,
+                args: [
+                    {
+                        type: "text",
+                        value: `${refresh}`
+                    },
+                    {
+                        type: "integer",
+                        value: `${id}`
+                    }
+                ]
+            }},
             {type: "close"}
         ]});
         return data;
@@ -46,7 +79,15 @@ export const db = {
     //encontrar User usando refreshToken
     async findUserWithRefresh(refresh: string) {
         const data = await instance.post('', {requests: [
-            {type: "execute", stmt: {sql: `SELECT * FROM User WHERE refresh_token='${refresh}'`}},
+            {type: "execute", stmt: {
+                sql: `SELECT * FROM User WHERE refresh_token=?`,
+                args: [
+                    {
+                        type: "text",
+                        value: `${refresh}`
+                    }
+                ]
+            }},
             {type: "close"}
         ]});
         return data;

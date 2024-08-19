@@ -28,7 +28,7 @@ export async function POST(req: Request) {
         //     }
         // });
         //creo que cambiar el return del api a foundUser.data.results[0]/response.result.rows pero idk, igual tener un fail safe o algo por si no es valida la data
-        console.log(foundUser.data.results[0].response.result.rows.length);
+        // console.log(foundUser.data.results[0].response.result.rows.length);
         if (foundUser.data.results[0].response.result.rows.length) {
             //buscar que status deberia ser para que el user trato de tener mail existente
             return new NextResponse("Account exists", {status: 405});

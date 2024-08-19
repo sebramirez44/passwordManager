@@ -12,9 +12,6 @@ import { db } from "@/app/lib/db";
 import * as jose from 'jose';
 import {cookies} from "next/headers";
 
-interface JwtPayload {
-    email: string;
-}
 
 export async function GET(req: Request) {
     try {
