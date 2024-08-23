@@ -23,6 +23,7 @@ export default function SignIn() {
 
       const data = await response.json();
       //data es la access token
+      localStorage.setItem("jwt", data);
       console.log(data);
 
     } catch(error) {

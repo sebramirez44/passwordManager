@@ -22,6 +22,7 @@ export async function POST(req: Request) {
         } else {
             if (await bcrypt.compare(password, foundUserData[0][2].value)) {
 
+                //agregar userId a payload si descubro como sacarle la payload
                 const accessToken = await new jose.SignJWT({"email": foundUserData[0][1].value})
                     .setProtectedHeader({alg: 'HS256'})
                     .setIssuedAt()

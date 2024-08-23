@@ -41,6 +41,7 @@ export async function GET(req: Request) {
                 .sign(new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET as string));
 
             return NextResponse.json({accessToken});
+            // return NextResponse.json({jwt: accessToken, email: foundUserData[0][1].value, user_id: foundUserData[0][0].value});
 
         } catch(error) {
             console.log(error);
