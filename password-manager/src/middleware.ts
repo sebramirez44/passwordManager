@@ -3,7 +3,6 @@
 //definir las rutas que no deberian ser protegidas y no hacer ese middleware en esas
 import {NextResponse, type NextRequest} from 'next/server';
 //cambiar por jose library
-import jwt from "jsonwebtoken";
 import * as jose from 'jose';
 
 export async function middleware(req: NextRequest) {

@@ -23,13 +23,13 @@ export async function POST(req: Request) {
             if (await bcrypt.compare(password, foundUserData[0][2].value)) {
 
                 //agregar userId a payload si descubro como sacarle la payload
-                const accessToken = await new jose.SignJWT({"email": foundUserData[0][1].value})
+                const accessToken = await new jose.SignJWT({"email": foundUserData[0][1].value, "userid": foundUserData[0][0].value})
                     .setProtectedHeader({alg: 'HS256'})
                     .setIssuedAt()
                     .setExpirationTime('30s')
                     .sign(new TextEncoder().encode(process.env.ACCESS_TOKEN_SECRET as string));
 
-                const refreshToken = await new jose.SignJWT({"email": foundUserData[0][1].value})
+                const refreshToken = await new jose.SignJWT({"email": foundUserData[0][1].value, "userid": foundUserData[0][0].value})
                     .setProtectedHeader({alg: 'HS256'})
                     .setIssuedAt()
                     .setExpirationTime('1d')

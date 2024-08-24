@@ -1,10 +1,12 @@
 "use client"
 import PasswordManagerIcon from "@/icons/lock-main";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 //cambiar por elementos de shacn maybe?
 
 
 export default function SignIn() {
+    const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -25,6 +27,8 @@ export default function SignIn() {
       //data es la access token
       localStorage.setItem("jwt", data);
       console.log(data);
+      router.push('/');
+      
 
     } catch(error) {
       console.log(error);
