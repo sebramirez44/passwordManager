@@ -4,6 +4,7 @@
 import {headers} from "next/headers"
 import { NextResponse } from "next/server";
 import * as jose from 'jose';
+import { db } from "@/app/lib/db";
 
 //obtener el valor de la jwt en el header, obtener el valor de 
 export async function DELETE() {
@@ -29,14 +30,27 @@ export async function DELETE() {
         //si el userid de la refresh token es la misma que la del usuario encontrado
         //permitir este pedo y eliminar la refresh token
         //si nah le digo que fuck off al motherfucker user man
+        //creo que esto jala porque si token no fuera valido se iria a error, maybe not idk
+        const foundUser = await db.getUserByEmail(`${jwtData?.email}`);
+        const foundUserData = foundUser.data.results[0].response.result.rows;
 
-        
+        console.log("after finding user and getting data")
+        console.log(foundUser.data.results[0].response.result);
+        if (jwtData?.userid == foundUserData[0][0].value) {
+            //eliminar refresh token del api
+            await db.deleteUserRefresh(jwtData?.userid as number);
+            console.log("sign-out successful");
+            return new NextResponse("ok", {status: 200});
+        } else {
+            //mostrar un error y hacer return
+            console.log("error when signing out");
+            return new NextResponse("error", {status: 405})
+        }
 
-        return NextResponse.json(token);
     } catch(error) {
         console.log(error);
         //jwt validfation failed
-        return new NextResponse("error", {status: 403});
+        return new NextResponse("error", {status: 405});
     }
 
 }

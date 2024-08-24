@@ -91,5 +91,20 @@ export const db = {
             {type: "close"}
         ]});
         return data;
-    }
+    },
+    async deleteUserRefresh(userId: number) {
+        const data = await instance.post('', {requests: [
+            {type: "execute", stmt: {
+                sql: `UPDATE User SET refresh_token='' WHERE id=?`,
+                args: [
+                    {
+                        type: "integer",
+                        value: userId
+                    }
+                ]
+            }},
+            {type: "close"}
+        ]});
+        return data;
+    },
 };
