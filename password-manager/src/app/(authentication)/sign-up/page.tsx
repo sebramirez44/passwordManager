@@ -1,6 +1,7 @@
 "use client"
 import PasswordManagerIcon from "@/icons/lock-main";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 //cambiar por elementos de shacn maybe?
 
 //hacer href a log in
@@ -10,6 +11,7 @@ export default function SignUp() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     //send a post request with username and password to sign-up endpoint
@@ -27,6 +29,21 @@ export default function SignUp() {
 
       const data = await response.json();
       console.log(data.status);
+      try {
+
+        const responseLogin = await fetch('http://localhost:3000/api/sign-in', {
+          method: "POST",
+          body: JSON.stringify(formData)
+        });
+        const dataLogin = await responseLogin.json();
+        //data es la access token
+        localStorage.setItem("jwt", dataLogin);
+        console.log(dataLogin);
+        router.push('/');
+      } catch(error) {
+        console.log("error during log-in");
+        console.log(error);
+      }
       //setUploading a false aqui hasta el final si lo hago
       //enviar request a api/sign-up con esta informacion y guardar la token
 
