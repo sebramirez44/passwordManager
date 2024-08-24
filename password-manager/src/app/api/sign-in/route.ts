@@ -18,7 +18,7 @@ export async function POST(req: Request) {
         const foundUserData = foundUser.data.results[0].response.result.rows;
 
         if (!foundUserData.length) {
-            return new NextResponse("Incorrect email or password", {status: 405});
+            return new NextResponse("Incorrect email or password", {status: 403});
         } else {
             if (await bcrypt.compare(password, foundUserData[0][2].value)) {
 
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
                 return NextResponse.json(accessToken);
 
             } else {
-                return new NextResponse("Incorrect email or password", {status: 405});
+                return new NextResponse("Incorrect email or password", {status: 403});
             }
         }
     } catch(error) {

@@ -31,7 +31,7 @@ export async function middleware(req: NextRequest) {
         } catch(error) {
             console.log(error);
             //jwt validfation failed
-            return new NextResponse("error", {status: 405});
+            return new NextResponse("error", {status: 403});
         }
 
         

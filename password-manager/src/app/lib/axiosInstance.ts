@@ -27,7 +27,9 @@ axiosInstance.interceptors.response.use(
             //no se si cambiar esto?
             //idk si tengo que hacer withcredentials aqui?
             const newAccessToken = await fetch("http://localhost:3000/api/refresh");
-            prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+            const accessJson = await newAccessToken.json();
+            prevRequest.headers['Authorization'] = `Bearer ${accessJson?.accessToken}`;
+            localStorage.setItem("jwt", `${accessJson?.accessToken}`);
             return axiosInstance(prevRequest);
         }
     }

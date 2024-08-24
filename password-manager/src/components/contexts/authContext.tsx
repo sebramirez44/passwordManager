@@ -45,9 +45,9 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({children}) 
                     userRef.current = {username: "seb", userid: "123"};
                     
                     //enviar informacion de esta cuenta al tener la jwt?
-                    const accessToken = await axiosInstance.get('/Account', {withCredentials: true});
+                    // /Account GET para obtener la informacion del usuario
+                    userRef.current = await axiosInstance.get('/Account', {withCredentials: true});
                     //en /refresh, enviar el username y el userid del usuario 
-                    console.log(accessToken.data);
                     setLoading(false);
                     // console.log(user);
                     if (!userRef.current) {
