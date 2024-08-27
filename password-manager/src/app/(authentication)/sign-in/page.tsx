@@ -58,7 +58,12 @@ export default function SignIn() {
         <p className="text-black font-bold text-2xl mt-4">Password</p>
         <input type="password" name="password" value={password} onChange={handlePasswordChange} className="w-full rounded-md border border-black p-2 mt-1" />
         <div className="flex flex-row justify-around mt-4">
-          <button className="bg-[#2B2D42] text-white font-bold text-lg rounded-full w-1/2 mr-1 mt-2 py-4">Create account</button>
+          <a href="http://localhost:3000/sign-up"></a>
+          <button className="bg-[#2B2D42] text-white font-bold text-lg rounded-full w-1/2 mr-1 mt-2 py-4">
+          <a href="http://localhost:3000/sign-up">
+            Create account
+          </a>
+          </button>
           <button className="bg-[#FF0000] text-white font-bold text-lg rounded-full w-1/2 ml-1 mt-2 py-4">Log in</button>
         </div>
       </form>
