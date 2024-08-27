@@ -2,6 +2,7 @@
 import PasswordManagerIcon from "@/icons/lock-main";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { AuthProvider } from "@/components/contexts/authContext";
 //cambiar por elementos de shacn maybe?
 
 //hacer href a log in
@@ -64,9 +65,14 @@ export default function SignUp() {
   function handleConfirmChange(e: React.ChangeEvent<HTMLInputElement>) {
     setConfirm(e.target.value.trim());
   };
+  
+  function handleButton(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault;
+    router.push("/sign-in");
+  };
 
   return (
-    <>
+    <AuthProvider>
       <div className="flex justify-center">
         <PasswordManagerIcon />
       </div>
@@ -82,14 +88,12 @@ export default function SignUp() {
         <p className="text-black font-bold text-2xl mt-4">Confirm password</p>
         <input type="password" name="confirm_password" value={confirm} onChange={handleConfirmChange} className="w-full rounded-md border border-black p-2 mt-1" />
         <div className="flex flex-row justify-around mt-4">
-          <button className="bg-[#2B2D42] text-white font-bold text-lg rounded-full w-1/2 mr-1 mt-2 py-4">
-          <a href="http://localhost:3000/sign-in">
+          <button type="button" onClick={handleButton} className="bg-[#2B2D42] text-white font-bold text-lg rounded-full w-1/2 mr-1 mt-2 py-4">
             Log in
-          </a>
           </button>
           <button className="bg-[#FF0000] text-white font-bold text-lg rounded-full w-1/2 ml-1 mt-2 py-4">Create account</button>
         </div>
       </form>
-    </>
+    </AuthProvider>
    )
 }

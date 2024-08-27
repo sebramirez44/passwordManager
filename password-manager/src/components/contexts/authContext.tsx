@@ -8,6 +8,7 @@
 "use client"
 import { axiosInstance } from "@/app/lib/axiosInstance";
 import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {createContext, useState, useEffect, useRef} from "react";
 
 interface UserData {
@@ -24,6 +25,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({children}) 
     //en vez de useState que user sea useRef?
     const router = useRouter();
     const requestRef = useRef(false);
+    const pathname = usePathname();
 
     //el useEffect orre dos vees?
     useEffect(() => {
@@ -39,31 +41,34 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({children}) 
         const checkAuthStatus = async () => {
             if (requestRef.current) return;
             requestRef.current = true;
-                try {
-                    //primero checar que sea la primera vez obteniendo access token o nah, checar si existe ylc
-                    
-                    userRef.current = {username: "seb", userid: "123"};
-                    
-                    //enviar informacion de esta cuenta al tener la jwt?
-                    // /Account GET para obtener la informacion del usuario
-                    userRef.current = await axiosInstance.get('/Account', {withCredentials: true});
-                    //en /refresh, enviar el username y el userid del usuario 
-                    setLoading(false);
-                    // console.log(user);
-                    if (!userRef.current) {
-                        router.push('/sign-in');
-                    }
-                    requestRef.current = true;
-
-                } catch(error) {
+            try {
+                //enviar informacion de esta cuenta al tener la jwt?
+                // /Account GET para obtener la informacion del usuario
+                console.log();
+                userRef.current = await axiosInstance.get('/Account', {withCredentials: true});
+                //en /refresh, enviar el username y el userid del usuario 
+                setLoading(false);
+                // console.log(user);
+                if (!userRef.current) {
+                    router.refresh();
                     router.push('/sign-in');
-                    console.log(error);
+                } else if (pathname==="/sign-in" || pathname==="/sign-up") {
+                    router.refresh();
+                    router.push('/');
                 }
+                requestRef.current = true;
+
+            } catch(error) {
+                if (pathname !== "/sign-up") {
+                    router.push('/sign-in');
+                }
+                console.log(error);
+            }
         };
         checkAuthStatus();
     }, [router]);
     //aqui se puede incluir un loading if (!isAuthenticated)
-    if (!loading && userRef.current) {
+    if ((!loading && userRef.current) || pathname==="/sign-in" || pathname==="/sign-up") {
         return (
             <AuthContext.Provider value={userRef.current}>
                 {children}
