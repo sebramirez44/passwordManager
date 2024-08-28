@@ -5,3 +5,7 @@
 .background {
   background: linear-gradient(#AF2628, #F6191D);
 }
+
+input:focus {
+  outline:none;
+}

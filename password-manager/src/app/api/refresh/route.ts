@@ -31,7 +31,7 @@ export async function GET(req: Request) {
         //TODO: cambiar refreshToken.value a obtener el valor de la base de datos
         try {
             const {payload: jwtData} = await jose.jwtVerify(
-                refreshToken.value, new TextEncoder().encode(process.env.REFRESH_TOKEN_SECRET as string)
+                foundUserData[0][3].value, new TextEncoder().encode(process.env.REFRESH_TOKEN_SECRET as string)
             );
             //hacer una nueva access token y hacerle return por json
             const accessToken = await new jose.SignJWT({"email": foundUserData[0][1].value})

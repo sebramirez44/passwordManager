@@ -28,7 +28,7 @@ export default function SignIn() {
       //data es la access token
       localStorage.setItem("jwt", data);
       console.log(data);
-      router.push('/sign-up');
+      router.push('/');
       
 
     } catch(error) {
@@ -66,10 +66,10 @@ export default function SignIn() {
         <input type="password" name="password" value={password} onChange={handlePasswordChange} className="w-full rounded-md border border-black p-2 mt-1" />
         <div className="flex flex-row justify-around mt-4">
           <a href="http://localhost:3000/sign-up"></a>
-          <button type="submit" onClick={handleButton} className="bg-[#2B2D42] text-white font-bold text-lg rounded-full w-1/2 mr-1 mt-2 py-4">
+          <button type="button" onClick={handleButton} className="bg-[#2B2D42] text-white font-bold text-lg rounded-full w-1/2 mr-1 mt-2 py-4">
             Create account
           </button>
-          <button className="bg-[#FF0000] text-white font-bold text-lg rounded-full w-1/2 ml-1 mt-2 py-4">Log in</button>
+          <button type="submit" className="bg-[#FF0000] text-white font-bold text-lg rounded-full w-1/2 ml-1 mt-2 py-4">Log in</button>
         </div>
       </form>
     </AuthProvider>
