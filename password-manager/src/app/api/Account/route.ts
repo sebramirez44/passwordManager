@@ -1,4 +1,9 @@
 //obtener la cookie de la refresh token, checar si existe en la db, si existe regresar el usuario de la refresh token
+//refactor esto a no incluir una refresh token, pero ahi no se como 
+//protejo mis rutas bien?
+//creo que solucion es revisar con access token, obtener el userid asi de la token
+//y buscarlo en la base de datos, client-side hacer catch para errores de autenticacion
+//y corregirlos haciendo /refresh
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { db } from "@/app/lib/db";
